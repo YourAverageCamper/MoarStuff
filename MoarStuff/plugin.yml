@@ -1,0 +1,11 @@
+name: MoarStuff
+description: Adds new stuff to the game
+main: me.zeus.MoarStuff.MoarStuff
+version: 2.2
+commands:
+  moarstuff:
+    description: Gives you the recipe book
+    syntax: /moarstuff
+  gimme:
+    description: Gives special item
+    syntax: /gimme <name>
