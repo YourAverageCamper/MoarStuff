@@ -18,7 +18,11 @@ public enum EffectType
 	
 	SHOOT_ENTITY, 
 	
-	SPAWN_ENTITY;
+	SPAWN_ENTITY, 
+	
+	ADD_ITEM, REMOVE_ITEM, DROP_ITEM,
+	
+	ADD_EXP, REMOVE_EXP, DROP_EXP;
 	
 	EffectType()
 	{
