@@ -88,13 +88,40 @@ public class CustomItemLoader
 		// check for potions
 		for (String key : keys)
 		{
-			// potions
 			for (int i = 0; i < 99; i++)
 			{
+				// potions
 				if (key.equalsIgnoreCase("potion-" + i))
 				{
 					String[] info = fc.getString("effects." + path + "." + key).split(";");
 					item.addEffect(new SpecialEffect(EffectType.valueOf(info[0]), PotionEffectType.getByName(info[1]), TargetType.valueOf(info[2]), Integer.parseInt(info[3]), Integer
+					        .parseInt(info[4])));
+				}
+				// shoot / spawn entity
+				if (key.equalsIgnoreCase("entity-" + i))
+				{
+					String[] info = fc.getString("effects." + path + "." + key).split(";");
+					if (info[0].equalsIgnoreCase("SPAWN"))
+					{
+						item.addEffect(new SpecialEffect(EffectType.SPAWN_ENTITY, EntityType.valueOf(info[1])));
+					}
+					else if (info[0].equalsIgnoreCase("SHOOT"))
+					{
+						item.addEffect(new SpecialEffect(EffectType.SHOOT_ENTITY, TargetType.NULL, EntityType.valueOf(info[1]), new Vector(Double.parseDouble(info[2]), Double.parseDouble(info[3]),
+						        Double.parseDouble(info[4]))));
+					}
+				}
+				// command(s)
+				if (key.equalsIgnoreCase("command-" + i))
+				{
+					String[] info = fc.getString("effects." + path + "." + key).split(";");
+					item.addEffect(new SpecialEffect(EffectType.EXECUTE_COMMAND, TargetType.valueOf(info[0]), info[1], Double.parseDouble(info[2])));
+				}
+				// drops
+				if (key.equalsIgnoreCase("item-" + i))
+				{
+					String[] info = fc.getString("effects." + path + "." + key).split(";");
+					item.addEffect(new SpecialEffect(EffectType.valueOf(info[0]), TargetType.valueOf(info[1]), Material.getMaterial(Integer.parseInt(info[2])), Integer.parseInt(info[3]), Integer
 					        .parseInt(info[4])));
 				}
 			}
@@ -110,15 +137,6 @@ public class CustomItemLoader
 				String[] info = fc.getString("effects." + path + "." + key).split(";");
 				item.addEffect(new SpecialEffect(EffectType.valueOf(info[0]), TargetType.valueOf(info[1]), Double.parseDouble(info[2])));
 			}
-			// command(s)
-			for (int i = 0; i < 99; i++)
-			{
-				if (key.equalsIgnoreCase("command-" + i))
-				{
-					String[] info = fc.getString("effects." + path + "." + key).split(";");
-					item.addEffect(new SpecialEffect(EffectType.EXECUTE_COMMAND, TargetType.valueOf(info[0]), info[1], Double.parseDouble(info[2])));
-				}
-			}
 			if (key.equalsIgnoreCase("explode"))
 			{
 				String[] info = fc.getString("effects." + path + "." + key).split(";");
@@ -128,22 +146,6 @@ public class CustomItemLoader
 			{
 				String[] info = fc.getString("effects." + path + "." + key).split(";");
 				item.addEffect(new SpecialEffect(EffectType.BROADCAST_MESSAGE, info[0]));
-			}
-			for (int i = 0; i < 99; i++)
-			{
-				if (key.equalsIgnoreCase("entity-" + i))
-				{
-					String[] info = fc.getString("effects." + path + "." + key).split(";");
-					if (info[0].equalsIgnoreCase("SPAWN"))
-					{
-						item.addEffect(new SpecialEffect(EffectType.SPAWN_ENTITY, EntityType.valueOf(info[1])));
-					}
-					else if (info[0].equalsIgnoreCase("SHOOT"))
-					{
-						item.addEffect(new SpecialEffect(EffectType.SHOOT_ENTITY, TargetType.NULL, EntityType.valueOf(info[1]), new Vector(Double.parseDouble(info[2]), Double.parseDouble(info[3]),
-						        Double.parseDouble(info[4]))));
-					}
-				}
 			}
 		}
 		MoarStuff.getInstance().getLoadedItems().add(item);
