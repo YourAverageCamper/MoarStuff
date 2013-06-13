@@ -16,16 +16,14 @@ public class EVT_PlayerFish implements Listener
 {
 	
 	
-	// =============================================================================================
-	
 	@EventHandler
 	public void onFish(PlayerFishEvent e)
 	{
 		Player p = e.getPlayer();
-		
 		if (!p.getItemInHand().hasItemMeta())
 			return;
-		
+		if (e.getCaught() == null)
+			return;
 		for (MSItem item : MoarStuff.getInstance().getLoadedItems())
 		{
 			if (item.getAsItem().getItemMeta().getDisplayName().equalsIgnoreCase(p.getItemInHand().getItemMeta().getDisplayName()))
@@ -34,7 +32,4 @@ public class EVT_PlayerFish implements Listener
 			}
 		}
 	}
-	
-	// =============================================================================================
-	
 }
