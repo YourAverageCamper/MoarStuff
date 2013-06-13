@@ -270,6 +270,25 @@ public class MSItem implements EventInterface
 								eff.performShootEntity(player, eff.getEntityType(), shootBowEvent.getProjectile().getVelocity());
 							}
 							break;
+						case DROP_EXP:
+							break;
+						case DROP_ITEM:
+							eff.performItemDrop(loc, new ItemStack(eff.getMaterial(), eff.getAmount()), eff.getChance());
+							break;
+						case ADD_ITEM:
+							eff.performItemTransaction(EffectType.ADD_ITEM, player, new ItemStack(eff.getMaterial(), eff.getAmount()));
+							break;
+						case REMOVE_ITEM:
+							eff.performItemTransaction(EffectType.REMOVE_ITEM, player, new ItemStack(eff.getMaterial(), eff.getAmount()));
+							break;
+						case ADD_EXP:
+							eff.performExpTransaction(EffectType.ADD_EXP, player, eff.getExp());
+							break;
+						case REMOVE_EXP:
+							eff.performExpTransaction(EffectType.ADD_EXP, player, eff.getExp());
+							break;
+						default:
+							break;
 					}
 				}
 			}
@@ -322,6 +341,21 @@ public class MSItem implements EventInterface
 							eff.performShootEntity(player, eff.getEntityType(), shootBowEvent.getProjectile().getVelocity());
 						}
 						break;
+					case DROP_ITEM:
+						eff.performItemDrop(loc, new ItemStack(eff.getMaterial(), eff.getAmount()), eff.getChance());
+						break;
+					case ADD_ITEM:
+						eff.performItemTransaction(EffectType.ADD_ITEM, player, new ItemStack(eff.getMaterial(), eff.getAmount()));
+						break;
+					case REMOVE_ITEM:
+						eff.performItemTransaction(EffectType.REMOVE_ITEM, player, new ItemStack(eff.getMaterial(), eff.getAmount()));
+						break;
+					case ADD_EXP:
+						eff.performExpTransaction(EffectType.ADD_EXP, player, eff.getExp());
+						break;
+					case REMOVE_EXP:
+						eff.performExpTransaction(EffectType.ADD_EXP, player, eff.getExp());
+						break;
 					default:
 						break;
 				}
@@ -350,6 +384,9 @@ public class MSItem implements EventInterface
 						{
 							eff.performShootEntity(player, eff.getEntityType(), shootBowEvent.getProjectile().getVelocity());
 						}
+						break;
+					case DROP_ITEM:
+						eff.performItemDrop(loc, new ItemStack(eff.getMaterial(), eff.getAmount()), eff.getChance());
 						break;
 					default:
 						break;

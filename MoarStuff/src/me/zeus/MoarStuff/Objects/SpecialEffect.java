@@ -2,11 +2,14 @@
 package me.zeus.MoarStuff.Objects;
 
 
+import java.util.Random;
+
 import me.zeus.MoarStuff.Enumeration.EffectType;
 import me.zeus.MoarStuff.Enumeration.TargetType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EnderPearl;
@@ -16,6 +19,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.WitherSkull;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -40,6 +44,10 @@ public class SpecialEffect
 	EntityType entityType;
 	boolean fire;
 	Vector vector;
+	Material material;
+	int chance;
+	int amount;
+	float exp;
 	
 	
 	
@@ -174,11 +182,51 @@ public class SpecialEffect
 	
 	
 	/*
+	 * Grab material
+	 */
+	public Material getMaterial()
+	{
+		return material;
+	}
+	
+	
+	
+	/*
+	 * Grab chance of event happening
+	 */
+	public int getChance()
+	{
+		return chance;
+	}
+	
+	
+	
+	/*
+	 * Grab the amount of X drop
+	 */
+	public int getAmount()
+	{
+		return amount;
+	}
+	
+	
+	
+	/*
 	 * Grab the shoot vector
 	 */
 	public Vector getVector()
 	{
 		return vector;
+	}
+	
+	
+	
+	/*
+	 * Grab exp to use in transaction
+	 */
+	public float getExp()
+	{
+		return exp;
 	}
 	
 	
@@ -290,6 +338,20 @@ public class SpecialEffect
 	{
 		this.type = spawnEntity;
 		this.entityType = valueOf;
+	}
+	
+	
+	
+	/*
+	 * Constructor for dropping items
+	 */
+	public SpecialEffect(EffectType ett, TargetType tt, Material mat, int amt, int chance)
+	{
+		this.type = ett;
+		this.targetType = tt;
+		this.material = mat;
+		this.amount = amt;
+		this.chance = chance;
 	}
 	
 	
@@ -407,6 +469,59 @@ public class SpecialEffect
 			case ENDER_PEARL:
 				player.launchProjectile(EnderPearl.class).setVelocity(velocity);
 				break;
+		}
+	}
+	
+	
+	
+	/*
+	 * Perform dropping an item
+	 */
+	public void performItemDrop(Location loc, ItemStack is, int chance)
+	{
+		int ran = new Random().nextInt(100) + 1;
+		if (ran < chance)
+		{
+			loc.getWorld().dropItemNaturally(loc, is);
+		}
+	}
+	
+	
+	
+	/*
+	 * Perform exp transaction
+	 */
+	public void performExpTransaction(EffectType type, Player player, float expAmount)
+	{
+		if (type.equals(EffectType.ADD_EXP))
+		{
+			player.setExp(player.getExp() + expAmount);
+		}
+		else if (type.equals(EffectType.REMOVE_EXP))
+		{
+			player.setExp(player.getExp() - expAmount < 0.1F ? 0 : player.getExp() - expAmount);
+		}
+	}
+	
+	
+	
+	/*
+	 * Perform item transaction
+	 */
+	@SuppressWarnings("deprecation")
+	public void performItemTransaction(EffectType type, Player player, ItemStack is)
+	{
+		if (type.equals(EffectType.ADD_ITEM))
+		{
+			player.getInventory().addItem(new ItemStack[] { is });
+			player.updateInventory();
+		}
+		else if (type.equals(EffectType.REMOVE_ITEM))
+		{
+			if (!player.getInventory().contains(is))
+				return;
+			player.getInventory().removeItem(new ItemStack[] { is });
+			player.updateInventory();
 		}
 	}
 }
