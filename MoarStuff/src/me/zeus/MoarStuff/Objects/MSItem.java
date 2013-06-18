@@ -183,7 +183,8 @@ public class MSItem implements EventInterface
 	@Override
 	public void executeShoot(EntityShootBowEvent event)
 	{
-		handleEffect((Player) event.getEntity(), event.getProjectile(), event.getEntity().getLocation(), event.getProjectile().getVelocity(), event);
+		if (((Player) event.getEntity()).hasPermission(permission))
+			handleEffect((Player) event.getEntity(), event.getProjectile(), event.getEntity().getLocation(), event.getProjectile().getVelocity(), event);
 	}
 	
 	
@@ -191,7 +192,8 @@ public class MSItem implements EventInterface
 	@Override
 	public void executeFish(PlayerFishEvent event)
 	{
-		handleEffect(event.getPlayer(), event.getCaught(), event.getCaught().getLocation(), new Vector(0, 0, 0), null);
+		if (event.getPlayer().hasPermission(permission))
+			handleEffect(event.getPlayer(), event.getCaught(), event.getCaught().getLocation(), new Vector(0, 0, 0), null);
 	}
 	
 	
@@ -199,7 +201,8 @@ public class MSItem implements EventInterface
 	@Override
 	public void executeHit(ProjectileHitEvent event)
 	{
-		handleEffect((Player) event.getEntity().getShooter(), event.getEntity(), event.getEntity().getLocation(), new Vector(0, 0, 0), null);
+		if (((Player) event.getEntity().getShooter()).hasPermission(permission))
+			handleEffect((Player) event.getEntity().getShooter(), event.getEntity(), event.getEntity().getLocation(), new Vector(0, 0, 0), null);
 	}
 	
 	
@@ -207,7 +210,8 @@ public class MSItem implements EventInterface
 	@Override
 	public void executeConsume(PlayerItemConsumeEvent event)
 	{
-		handleEffect(event.getPlayer(), null, event.getPlayer().getLocation(), new Vector(0, 0, 0), null);
+		if (event.getPlayer().hasPermission(permission))
+			handleEffect(event.getPlayer(), null, event.getPlayer().getLocation(), new Vector(0, 0, 0), null);
 	}
 	
 	
@@ -218,11 +222,8 @@ public class MSItem implements EventInterface
 	private void handleEffect(Player player, Entity entity, Location loc, Vector velocity, EntityShootBowEvent shootBowEvent)
 	{
 		for (SpecialEffect eff : this.getEffects())
-		{
 			if (eff.getTargetType().equals(TargetType.NEARBY_TARGET))
-			{
 				for (Entity e : entity.getNearbyEntities(eff.getRadius(), eff.getRadius(), eff.getRadius()))
-				{
 					switch (eff.type)
 					{
 						case ADD_HEALTH:
@@ -262,13 +263,9 @@ public class MSItem implements EventInterface
 						case SHOOT_ENTITY:
 							shootBowEvent.setCancelled(true);
 							if (eff.getVector().getX() > 1)
-							{
 								eff.performShootEntity(player, eff.getEntityType(), eff.getVector());
-							}
 							else
-							{
 								eff.performShootEntity(player, eff.getEntityType(), shootBowEvent.getProjectile().getVelocity());
-							}
 							break;
 						case DROP_EXP:
 							break;
@@ -290,10 +287,7 @@ public class MSItem implements EventInterface
 						default:
 							break;
 					}
-				}
-			}
 			else if (eff.getTargetType().equals(TargetType.PLAYER))
-			{
 				switch (eff.type)
 				{
 					case ADD_HEALTH:
@@ -333,13 +327,9 @@ public class MSItem implements EventInterface
 					case SHOOT_ENTITY:
 						shootBowEvent.setCancelled(true);
 						if (eff.getVector().getX() > 1)
-						{
 							eff.performShootEntity(player, eff.getEntityType(), eff.getVector());
-						}
 						else
-						{
 							eff.performShootEntity(player, eff.getEntityType(), shootBowEvent.getProjectile().getVelocity());
-						}
 						break;
 					case DROP_ITEM:
 						eff.performItemDrop(loc, new ItemStack(eff.getMaterial(), eff.getAmount()), eff.getChance());
@@ -359,9 +349,7 @@ public class MSItem implements EventInterface
 					default:
 						break;
 				}
-			}
 			else if (eff.getTargetType().equals(TargetType.NULL))
-			{
 				switch (eff.type)
 				{
 					case BROADCAST_MESSAGE:
@@ -377,13 +365,9 @@ public class MSItem implements EventInterface
 					case SHOOT_ENTITY:
 						shootBowEvent.setCancelled(true);
 						if (eff.getVector().getX() > 1)
-						{
 							eff.performShootEntity(player, eff.getEntityType(), eff.getVector());
-						}
 						else
-						{
 							eff.performShootEntity(player, eff.getEntityType(), shootBowEvent.getProjectile().getVelocity());
-						}
 						break;
 					case DROP_ITEM:
 						eff.performItemDrop(loc, new ItemStack(eff.getMaterial(), eff.getAmount()), eff.getChance());
@@ -391,7 +375,5 @@ public class MSItem implements EventInterface
 					default:
 						break;
 				}
-			}
-		}
 	}
 }
