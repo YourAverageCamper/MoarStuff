@@ -22,7 +22,16 @@ public enum EffectType
 	
 	ADD_ITEM, REMOVE_ITEM, DROP_ITEM,
 	
-	ADD_EXP, REMOVE_EXP, DROP_EXP;
+	ADD_EXP, REMOVE_EXP, DROP_EXP,
+	
+	LAUNCH,
+	
+	TELEPORT,
+	
+	
+	
+	
+	;
 	
 	EffectType()
 	{
