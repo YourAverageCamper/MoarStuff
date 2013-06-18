@@ -13,6 +13,9 @@ import me.zeus.MoarStuff.Events.EVT_PlayerItemConsume;
 import me.zeus.MoarStuff.Events.EVT_ProjectileHit;
 import me.zeus.MoarStuff.Objects.MSItem;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -69,13 +72,9 @@ public class MoarStuff extends JavaPlugin
 	 */
 	private void init_directories()
 	{
-		boolean defaults = false;
 		rootDir = new File(getDataFolder() + "");
 		if (!rootDir.exists())
-		{
 			rootDir.mkdirs();
-			defaults = true;
-		}
 		rodsDir = new File(getDataFolder() + "/rods");
 		if (!rodsDir.exists())
 			rodsDir.mkdirs();
@@ -88,8 +87,6 @@ public class MoarStuff extends JavaPlugin
 		bowDir = new File(getDataFolder() + "/bows");
 		if (!bowDir.exists())
 			bowDir.mkdirs();
-		if (defaults)
-			init_defaults();
 	}
 	
 	
@@ -137,7 +134,40 @@ public class MoarStuff extends JavaPlugin
 	
 	
 	
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		if (cmd.getName().equalsIgnoreCase("moarstuff"))
+		{
+			if (args.length < 1)
+			{
+				sender.sendMessage("§4Invalid arguments");
+				return false;
+			}
+			if (args.length == 1)
+			{
+				if (args[0].equalsIgnoreCase("defaults"))
+				{
+					if (sender instanceof ConsoleCommandSender)
+					{
+						init_defaults();
+						sender.sendMessage("§aDefault files have been created, please edit/move them to their correct folders, then restart the server to see changes.");
+					}
+					else
+					{
+						sender.sendMessage("§4This command can only be executed from console!");
+						return false;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+	
 	//======================================================================================//
+	
+	
 	/*
 	 * Grab the main instance
 	 */
@@ -155,4 +185,6 @@ public class MoarStuff extends JavaPlugin
 	{
 		return customItems;
 	}
+	
+	
 }
