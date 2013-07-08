@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.zeus.MoarStuff.Commands.MS_CMD;
 import me.zeus.MoarStuff.Events.EVT_CraftItem;
 import me.zeus.MoarStuff.Events.EVT_EntityShootBow;
 import me.zeus.MoarStuff.Events.EVT_PlayerFish;
@@ -13,9 +14,6 @@ import me.zeus.MoarStuff.Events.EVT_PlayerItemConsume;
 import me.zeus.MoarStuff.Events.EVT_ProjectileHit;
 import me.zeus.MoarStuff.Objects.MSItem;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,6 +49,8 @@ public class MoarStuff extends JavaPlugin
 		init_loadFiles(foodsDir);
 		init_loadFiles(drinksDir);
 		init_loadFiles(rodsDir);
+		
+		getCommand("moarstuff").setExecutor(new MS_CMD());
 	}
 	
 	
@@ -117,50 +117,6 @@ public class MoarStuff extends JavaPlugin
 			File f = files[i];
 			CustomItemLoader.setup(f);
 		}
-	}
-	
-	
-	
-	/*
-	 * Load all default files
-	 */
-	private void init_defaults()
-	{
-		String[] files = new String[] { "bows/DefaultBow.yml", "bows/EnderBow.yml", "bows/WitherBow.yml", "drinks/Mineshine.yml", "foods/CarrotSoup.yml", "foods/DefaultFood.yml",
-		        "foods/PotatoSoup.yml", "rods/Gill Griller.yml", "rods/Default Rod.yml" };
-		for (int i = 0; i < files.length; i++)
-			this.saveResource("defaults/" + files[i], false);
-	}
-	
-	
-	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
-	{
-		if (cmd.getName().equalsIgnoreCase("moarstuff"))
-		{
-			if (args.length < 1)
-			{
-				sender.sendMessage("§4Invalid arguments");
-				return false;
-			}
-			if (args.length == 1)
-			{
-				if (args[0].equalsIgnoreCase("defaults"))
-				{
-					if (sender instanceof ConsoleCommandSender)
-					{
-						init_defaults();
-						sender.sendMessage("§aDefault files have been created, please edit/move them to their correct folders, then restart the server to see changes.");
-					}
-					else
-					{
-						sender.sendMessage("§4This command can only be executed from console!");
-						return false;
-					}
-				}
-			}
-		}
-		return false;
 	}
 	
 	
